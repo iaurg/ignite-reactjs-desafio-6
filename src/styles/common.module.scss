@@ -1,1 +1,46 @@
-// TODO
+.container {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.post {
+  margin-top: 3rem;
+
+  h1 {
+    font-size: 3rem;
+  }
+
+  h2 {
+    font-size: 2.5rem;
+    margin-top: 3rem;
+  }
+
+  p {
+    font-size: 1.125;
+    margin-top: 0.5rem;
+    color: var(--gray-200);
+  }
+
+  strong {
+    font-weight: 700;
+    font-size:1.75rem;
+    color: var(--gray-100);
+  }
+
+  .details {
+    margin-top: 1.5rem;
+    font-size: 0.875;
+    color: var(--gray-300);
+    display: flex;
+    span {
+      display: flex;
+      align-items: center;
+      margin-right: 1.5rem;
+    }
+  }
+}
+
+.icon {
+  margin-right: 0.5rem;
+}

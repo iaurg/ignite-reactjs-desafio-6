@@ -1,6 +1,5 @@
-import { ReactElement } from 'react';
 import { GetStaticProps } from 'next';
-
+import { FiCalendar, FiUser } from 'react-icons/fi';
 import Link from 'next/link';
 
 import { getPrismicClient } from '../services/prismic';
@@ -31,15 +30,46 @@ export default function Home({ postsPagination }: HomeProps) {
   return (
     <>
       <Header />
-      <main className={styles.container}>
-        <div className={styles.posts}>
-          <Link key="x" href="/posts/">
+      <main className={commonStyles.container}>
+        <div className={commonStyles.post}>
+          <Link key="x" href="/post/teste">
             <a>
               <strong>Como utilizar hooks</strong>
               <p>Pensando em sincronização</p>
-              <time>15 Mar 2021</time>
+              <div className={commonStyles.details}>
+                <time>
+                  <FiCalendar className={commonStyles.icon} />
+                  15 Mar 2021
+                </time>
+                <span>
+                  <FiUser className={commonStyles.icon} />
+                  Joseph Oliveira
+                </span>
+              </div>
             </a>
           </Link>
+        </div>
+
+        <div className={commonStyles.post}>
+          <Link key="x" href="/post/teste">
+            <a>
+              <strong>Como utilizar hooks</strong>
+              <p>Pensando em sincronização</p>
+              <div className={commonStyles.details}>
+                <time>
+                  <FiCalendar className={commonStyles.icon} />
+                  15 Mar 2021
+                </time>
+                <span>
+                  <FiUser className={commonStyles.icon} />
+                  Joseph Oliveira
+                </span>
+              </div>
+            </a>
+          </Link>
+        </div>
+        <div className={styles.loadMore}>
+          <a href="x">Carregar mais posts</a>
         </div>
       </main>
     </>

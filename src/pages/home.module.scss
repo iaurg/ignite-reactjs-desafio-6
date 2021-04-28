@@ -1,4 +1,15 @@
-.container {
-  max-width: 700px;
-  margin: 0 auto;
+.loadMore {
+  margin-top: 3rem;
+
+  a {
+    color: var(--pink-500);
+    font-weight: 600;
+    font-size:1.125rem;
+    transition: filter 0.5s;
+
+    &:hover {
+      filter: brightness(0.7);
+    }
+  }
+
 }

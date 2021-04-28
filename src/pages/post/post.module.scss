@@ -1,1 +1,10 @@
-// TODO
+.image {
+  width: 100%;
+  overflow:hidden;
+  max-height: 400px;
+  object-fit: cover;
+
+  img {
+    width: 100%;
+  }
+}
