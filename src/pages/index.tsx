@@ -2,9 +2,9 @@ import { GetStaticProps } from 'next';
 import { FiCalendar, FiUser } from 'react-icons/fi';
 import Link from 'next/link';
 import Prismic from '@prismicio/client';
-
-import { RichText } from 'prismic-dom';
-import { useEffect, useState } from 'react';
+import { format } from 'date-fns';
+import ptBR from 'date-fns/locale/pt-BR';
+import { useState } from 'react';
 import { getPrismicClient } from '../services/prismic';
 import commonStyles from '../styles/common.module.scss';
 import styles from './home.module.scss';
@@ -29,6 +29,23 @@ interface HomeProps {
   postsPagination: PostPagination;
 }
 
+const mapResults = array =>
+  array.map(post => {
+    return {
+      uid: post.uid,
+      first_publication_date: format(
+        new Date(post.first_publication_date),
+        'dd LLL yyyy',
+        { locale: ptBR }
+      ),
+      data: {
+        title: post.data.title,
+        author: post.data.author,
+        subtitle: post.data.subtitle,
+      },
+    };
+  });
+
 export default function Home({ postsPagination }: HomeProps) {
   const [results, setResults] = useState<Post[]>(() => {
     return postsPagination.results;
@@ -43,23 +60,7 @@ export default function Home({ postsPagination }: HomeProps) {
       .then(response => response.json())
       .then(data => {
         setNextPage(data.next_page);
-        const posts = data.results.map(post => {
-          return {
-            uid: post.uid,
-            first_publication_date: new Date(
-              post.first_publication_date
-            ).toLocaleDateString('pt-BR', {
-              day: '2-digit',
-              month: '2-digit',
-              year: '2-digit',
-            }),
-            data: {
-              title: post.data.title,
-              author: post.data.author,
-              subtitle: post.data.subtitle,
-            },
-          };
-        });
+        const posts = mapResults(data.results);
         setResults([...results, ...posts]);
       });
   }
@@ -110,23 +111,7 @@ export const getStaticProps: GetStaticProps = async () => {
     }
   );
 
-  const posts = postsResponse.results.map(post => {
-    return {
-      uid: post.uid,
-      first_publication_date: new Date(
-        post.first_publication_date
-      ).toLocaleDateString('pt-BR', {
-        day: '2-digit',
-        month: '2-digit',
-        year: '2-digit',
-      }),
-      data: {
-        title: post.data.title,
-        author: post.data.author,
-        subtitle: post.data.subtitle,
-      },
-    };
-  });
+  const posts = mapResults(postsResponse.results);
 
   return {
     props: {
