@@ -1,5 +1,6 @@
 import { GetStaticProps } from 'next';
 import Prismic from '@prismicio/client';
+import { RichText } from 'prismic-dom';
 
 import { FiCalendar, FiClock, FiUser } from 'react-icons/fi';
 import { useRouter } from 'next/router';
@@ -40,6 +41,16 @@ export default function Post({ post }: PostProps) {
     return <div>Carregando...</div>;
   }
 
+  const readingTime = post.data.content.reduce((acc, obj) => {
+    const bodyText = RichText.asText(obj.body);
+
+    const textLength = bodyText.split(/\s/g).length;
+
+    const time = Math.ceil(textLength / 200);
+
+    return acc + time;
+  }, 0);
+
   return (
     <>
       <Header />
@@ -61,16 +72,21 @@ export default function Post({ post }: PostProps) {
               {post.data.author}
             </span>
             <span>
-              <FiClock className={commonStyles.icon} />4 min
+              <FiClock className={commonStyles.icon} />
+              {readingTime} min
             </span>
           </div>
 
-          {post.data.content.map(item => (
-            <div className="postContent">
-              <h2>{item.heading}</h2>
-              {item.body.map(itemBody => (
-                <div dangerouslySetInnerHTML={{ __html: itemBody.text }} />
-              ))}
+          {post.data.content.map(({ heading, body }, index) => (
+            // eslint-disable-next-line react/no-array-index-key
+            <div key={index} className={styles.content}>
+              <h1>{heading}</h1>
+              <div
+                // eslint-disable-next-line react/no-danger
+                dangerouslySetInnerHTML={{
+                  __html: `${RichText.asHtml(body)}`,
+                }}
+              />
             </div>
           ))}
         </article>
@@ -106,10 +122,12 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   const prismic = getPrismicClient();
   const response = await prismic.getByUID('posts', String(slug), {});
 
-  const content = response.data.content.map(contentInside => ({
-    heading: contentInside.heading,
-    body: contentInside.body,
-  }));
+  const content = response.data.content.map(({ heading, body }) => {
+    return {
+      heading,
+      body,
+    };
+  });
 
   const post = {
     first_publication_date: response.first_publication_date,
