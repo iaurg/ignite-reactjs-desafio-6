@@ -29,15 +29,12 @@ interface HomeProps {
   postsPagination: PostPagination;
 }
 
+/* I want format here, but to pass tests I need to move inside return */
 const mapResults = array =>
   array.map(post => {
     return {
       uid: post.uid,
-      first_publication_date: format(
-        new Date(post.first_publication_date),
-        'dd LLL yyyy',
-        { locale: ptBR }
-      ),
+      first_publication_date: post.first_publication_date,
       data: {
         title: post.data.title,
         author: post.data.author,
@@ -70,15 +67,21 @@ export default function Home({ postsPagination }: HomeProps) {
       <Header />
       <main className={commonStyles.container}>
         {results.map(post => (
-          <div className={commonStyles.post}>
-            <Link key={post.uid} href={`/post/${post.uid}`}>
+          <div className={commonStyles.post} key={post.uid}>
+            <Link href={`/post/${post.uid}`}>
               <a>
                 <strong>{post.data.title}</strong>
                 <p>{post.data.subtitle}</p>
                 <div className={commonStyles.details}>
                   <span>
                     <FiCalendar className={commonStyles.icon} />
-                    <time>{post.first_publication_date}</time>
+                    <time>
+                      {format(
+                        new Date(post.first_publication_date),
+                        'dd LLL yyyy',
+                        { locale: ptBR }
+                      )}
+                    </time>
                   </span>
                   <span>
                     <FiUser className={commonStyles.icon} />
